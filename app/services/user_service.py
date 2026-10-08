@@ -1,0 +1,44 @@
+from sqlalchemy.orm import Session
+
+from app.core.security import hash_password,verify_password
+from app.db.models import User
+from app.schemas.user import UserCreate
+from fastapi import HTTPException
+
+
+
+def create_user(db: Session, user_data: UserCreate) -> User:
+    hashed_password = hash_password(user_data.password)
+
+    existing_user = (
+        db.query(User)
+        .filter(User.email == user_data.email)
+        .first()
+    )
+
+    if existing_user:
+        raise ValueError("Email already registered")
+    
+    user = User(
+        user_name=user_data.user_name,
+        email=user_data.email,
+        password=hashed_password,
+    )
+
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+
+    return user
+
+def authenticate_user(db:Session, email:str, password: str) -> User:
+    user = (db.query(User).filter(User.email ==email).first())
+    
+    if not user:
+        raise HTTPException(status_code=401, detail = "Invalid email or password")
+    
+    if not verify_password(password, user.password):
+        raise HTTPException(status_code = 401, detail = "Invalid email or password")
+
+    return user
+
