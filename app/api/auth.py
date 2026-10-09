@@ -38,7 +38,7 @@ def login(user_data: UserLogin, db: Session = Depends(get_db)):
 
     access_token = create_access_token({"sub": str(user.id)})
 
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {"access_token": access_token, "token_type": "bearer","role": "admin" if user.is_admin else "customer"}
 
 
 

@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, Float, Column, String, ForeignKey
+from sqlalchemy import Integer, Float, Column, String, ForeignKey,Boolean
 from sqlalchemy.orm import relationship
 from app.db.database import Base
 
@@ -10,6 +10,8 @@ class User(Base):
 
     email = Column(String, unique = True, nullable = False)
     password = Column(String, nullable = True)
+
+    is_admin = Column(Boolean, default=False, nullable=False)
 
     products = relationship("Product", back_populates ="owner")
 
