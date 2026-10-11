@@ -11,6 +11,7 @@ class User(Base):
     email = Column(String, unique = True, nullable = False)
     password = Column(String, nullable = True)
 
+    credit = Column(Integer, default=1000, nullable= True)
     is_admin = Column(Boolean, default=False, nullable=False)
 
     products = relationship("Product", back_populates ="owner")
@@ -24,6 +25,9 @@ class Product(Base):
     price = Column(Float, nullable = False)
     stock = Column(Integer, )
     description = Column(String, nullable = True)
+    product_type = Column(String, nullable= True)
 
     user_id = Column(Integer, ForeignKey("users.id"))
     owner = relationship("User", back_populates = "products")
+
+

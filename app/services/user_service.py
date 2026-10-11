@@ -1,9 +1,10 @@
 from sqlalchemy.orm import Session
+from fastapi import HTTPException, Depends
 
 from app.core.security import hash_password,verify_password
 from app.db.models import User
 from app.schemas.user import UserCreate
-from fastapi import HTTPException
+from app.db.models import Product
 
 
 
@@ -41,4 +42,11 @@ def authenticate_user(db:Session, email:str, password: str) -> User:
         raise HTTPException(status_code = 401, detail = "Invalid email or password")
 
     return user
+
+def get_all_products(db:Session) -> list[Product]:
+    return db.query(Product).order_by(Product.id).all()                                                        
+
+def get_product_by_id(product_id: int, db: Session)-> Product:
+    return db.query(Product).filter(product_id == Product.id).first()
+
 
