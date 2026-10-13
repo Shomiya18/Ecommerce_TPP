@@ -23,11 +23,36 @@ class Product(Base):
     id = Column(Integer, primary_key = True)
     name = Column(String, nullable = False)
     price = Column(Float, nullable = False)
-    stock = Column(Integer, )
+    stock = Column(Integer)
     description = Column(String, nullable = True)
     product_type = Column(String, nullable= True)
 
     user_id = Column(Integer, ForeignKey("users.id"))
     owner = relationship("User", back_populates = "products")
+
+
+class Order(Base):
+    __tablename__ = "orders"
+
+    id = Column(Integer,primary_key=True,)
+    user_id = Column(Integer,ForeignKey("users.id"), nullable=False)
+    total_price = Column(Float, nullable= False)
+    status = Column(String, nullable= False, default="pending")
+
+    customer = relationship("User")
+    items = relationship("Order_Item", back_populates="order", cascade = "all,delete-orphan")
+
+class Order_Item(Base):
+    __tablename__ = "order_items"
+
+    id = Column(Integer, primary_key=True)
+    order_id = Column(Integer, ForeignKey("orders.id"), nullable= False)
+    product_id = Column(Integer, ForeignKey("products.id"), nullable=False)
+    quantity = Column(Integer, nullable= False)
+    unit_price = Column(Float, nullable=False)
+
+    order = relationship("Order", back_populates="items")
+    product = relationship("Product")
+
 
 
