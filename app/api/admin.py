@@ -37,7 +37,7 @@ def update_product(product_id: int, product_data: AdminProductUpdate,db: Session
     return admin_services.AdminProductUpdate(db, product_id, product_data)
 
 @router.patch("/products/{product_id}/stock", response_model= AdminProductCreateReasponse)
-def update_stock(product_id: int, stock_data: AdminStockUpdate, db: Session(get_db), current_admin: User = Depends(get_current_admin)):
+def update_stock(product_id: int, stock_data: AdminStockUpdate, db: Session = Depends(get_db), current_admin: User = Depends(get_current_admin)):
     return admin_services.update_product_stock(db, product_id, stock_data.stock)
 
 @router.delete("/products,{product_id}", status_code=204)

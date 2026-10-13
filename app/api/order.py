@@ -16,7 +16,7 @@ def checkout(
     order_data: OrderCreate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
-):
+    ):
     return create_order(
         db=db,
         user_id=current_user.id,
